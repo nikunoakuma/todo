@@ -1,0 +1,9 @@
+env: "local"
+connection_string: "your_connection_string"
+access_token_ttl: "720h"
+standard_query_timeout: "4s"
+request_timeout: "10s"
+http-server:
+  address: "localhost:8082"
+  timeout: "4s"
+  idle_timeout: "60s"
