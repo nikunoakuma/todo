@@ -87,7 +87,7 @@ func NewUpdateNoteHandler(log *slog.Logger, noteUpdater NoteUpdater) http.Handle
 			return
 		}
 		if errors.Is(err, context.DeadlineExceeded) {
-			log.Warn("failed to get notes", sl.Err(err))
+			log.Warn("failed to update note", sl.Err(err))
 
 			w.WriteHeader(504)
 			render.JSON(w, r, resp.Err("request took too long to process, try again later"))
@@ -95,7 +95,7 @@ func NewUpdateNoteHandler(log *slog.Logger, noteUpdater NoteUpdater) http.Handle
 			return
 		}
 		if errors.Is(err, storage.ErrNoNotes) {
-			log.Info("failed to update notes", sl.Err(err))
+			log.Info("failed to update note", sl.Err(err))
 
 			w.WriteHeader(404)
 			render.JSON(w, r, resp.Err("no notes with this id"))
@@ -103,7 +103,7 @@ func NewUpdateNoteHandler(log *slog.Logger, noteUpdater NoteUpdater) http.Handle
 			return
 		}
 		if err != nil {
-			log.Error("failed to save note", sl.Err(err))
+			log.Error("failed to update note", sl.Err(err))
 
 			w.WriteHeader(500)
 			render.JSON(w, r, resp.Err("internal error"))

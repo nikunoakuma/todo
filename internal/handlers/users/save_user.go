@@ -20,7 +20,7 @@ type UserSaver interface {
 }
 
 type AccessTokenGenerator interface {
-	NewAccessToken(userID int, tokenTTL time.Duration) (string, error)
+	GenerateAccessToken(userID int, tokenTTL time.Duration) (string, error)
 }
 
 func NewSaveUserHandler(log *slog.Logger, userSaver UserSaver, accessTokenGenerator AccessTokenGenerator, jwtTTL time.Duration) http.HandlerFunc {
@@ -70,7 +70,7 @@ func NewSaveUserHandler(log *slog.Logger, userSaver UserSaver, accessTokenGenera
 			return
 		}
 		if errors.Is(err, context.DeadlineExceeded) {
-			log.Warn("failed to get notes", sl.Err(err))
+			log.Warn("failed to save user", sl.Err(err))
 
 			w.WriteHeader(504)
 			render.JSON(w, r, resp.Err("request took too long to process, try again later"))
@@ -96,7 +96,7 @@ func NewSaveUserHandler(log *slog.Logger, userSaver UserSaver, accessTokenGenera
 
 		log.Info("user saved", slog.Int64("id", id))
 
-		jwt, err := accessTokenGenerator.NewAccessToken(int(id), jwtTTL)
+		jwt, err := accessTokenGenerator.GenerateAccessToken(int(id), jwtTTL)
 		if err != nil {
 			log.Error("failed to generate jwt", sl.Err(err))
 

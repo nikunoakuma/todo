@@ -33,8 +33,8 @@ func NewManager() (*Manager, error) {
 	return &Manager{[]byte(jwtSecret)}, nil
 }
 
-func (m *Manager) NewAccessToken(userID int, tokenTTL time.Duration) (string, error) {
-	const op = "auth.NewAccessToken"
+func (m *Manager) GenerateAccessToken(userID int, tokenTTL time.Duration) (string, error) {
+	const op = "auth.GenerateAccessToken"
 
 	generatedJWT := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,

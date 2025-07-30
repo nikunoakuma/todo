@@ -54,7 +54,7 @@ func NewDeleteNoteHandler(log *slog.Logger, noteDeleter NoteDeleter) http.Handle
 			return
 		}
 		if errors.Is(err, context.DeadlineExceeded) {
-			log.Warn("failed to get notes", sl.Err(err))
+			log.Warn("failed to delete note", sl.Err(err))
 
 			w.WriteHeader(504)
 			render.JSON(w, r, resp.Err("request took too long to process, try again later"))
@@ -62,15 +62,15 @@ func NewDeleteNoteHandler(log *slog.Logger, noteDeleter NoteDeleter) http.Handle
 			return
 		}
 		if errors.Is(err, storage.ErrNoNotes) {
-			log.Info("failed to get notes", sl.Err(err))
+			log.Info("failed to delete note", sl.Err(err))
 
 			w.WriteHeader(404)
-			render.JSON(w, r, resp.Err("no notes with this id"))
+			render.JSON(w, r, resp.Err("no note with this id"))
 
 			return
 		}
 		if err != nil {
-			log.Error("failed to get notes", sl.Err(err))
+			log.Error("failed to delete note", sl.Err(err))
 
 			w.WriteHeader(500)
 			render.JSON(w, r, resp.Err("internal error"))

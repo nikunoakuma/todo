@@ -76,7 +76,7 @@ func NewSaveNoteHandler(log *slog.Logger, noteSaver NoteSaver) http.HandlerFunc 
 			return
 		}
 		if errors.Is(err, context.DeadlineExceeded) {
-			log.Warn("failed to get notes", sl.Err(err))
+			log.Warn("failed to save note", sl.Err(err))
 
 			w.WriteHeader(504)
 			render.JSON(w, r, resp.Err("request took too long to process, try again later"))
